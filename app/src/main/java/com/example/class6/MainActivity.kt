@@ -1,8 +1,9 @@
 package com.example.class6
 
+import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.class6.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -11,22 +12,19 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
-        // Inicializar ViewBinding
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Configurar botón de Login
-        binding.btnLogin.setOnClickListener {
-            val username = binding.etUsername.text.toString().trim()
-            val password = binding.etPassword.text.toString().trim()
+        setupRecyclerView()
+    }
 
-            if (username.isNotEmpty() && password.isNotEmpty()) {
-                // Mostrar Toast solicitado
-                Toast.makeText(this, "ingresaste las credenciales correctas", Toast.LENGTH_LONG).show()
-            } else {
-                // Validación básica para evitar campos vacíos
-                Toast.makeText(this, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show()
+    private fun setupRecyclerView() {
+        binding.rvProducts.apply {
+            layoutManager = GridLayoutManager(this@MainActivity, 2)
+            adapter = ProductAdapter(DataRepository.productos) { product ->
+                val intent = Intent(this@MainActivity, DetailActivity::class.java)
+                intent.putExtra("PRODUCTO", product)
+                startActivity(intent)
             }
         }
     }
